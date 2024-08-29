@@ -23,7 +23,11 @@ exports.register = async(req,res) => {
                 aadhar,
                 aadhar_verify:false,
                 dob,
-                password
+                password,
+                pancard:"",
+                address:"",
+                account:"",
+                gst:""
             })
             await newUser.save()
             res.status(200).json(newUser)

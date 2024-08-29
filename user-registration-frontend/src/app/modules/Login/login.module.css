@@ -6,23 +6,13 @@
     padding: 20px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     background-color: rgb(46, 43, 43);
+    color: white;
 }
 
-.inputFiedls{
-    text-align: left;
-    margin: 10px;
-}
-
-.formContent {
+.formContent{
     display: flex;
     flex-direction: column;
     gap: 10px;
-    text-align: left;
-}
-
-.fieldName{
-    font-size: 16px;
-    color: white;
 }
 
 .formContent input{
@@ -46,4 +36,3 @@
     border-radius: 10px;
     width: 100px;
 }
-

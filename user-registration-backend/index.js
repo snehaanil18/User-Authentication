@@ -23,11 +23,14 @@ pServer.use(cors({
 pServer.use(express.json())
 
 pServer.use(session({
-    secret: 'secret_key', // Replace with a strong secret key
+    secret: 'your_secret_key', // Change to a strong secret key
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false } // Set secure to true if using HTTPS
-}));
+    cookie: { 
+      secure: false, // Set to true if using HTTPS
+      maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+  }));
 
 pServer.use(router)
 

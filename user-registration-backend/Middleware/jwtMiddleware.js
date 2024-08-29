@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const jwtMiddleware = (req,res,next) => {
     console.log('Inside jwt Middleware');
     try{
-            //get token
+    //get token
     const token = req.headers['authorization'].slice(7)
     console.log(token)
 

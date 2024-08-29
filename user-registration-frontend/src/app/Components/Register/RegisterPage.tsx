@@ -6,7 +6,7 @@ import { RootState } from '../../Redux/store';
 import { setUserDetails } from '../../Redux/userSlice';
 import Image from 'next/image';
 import styles from './register.module.css';
-import icon from '../../../../public/Images/bank-icon.svg';
+
 import {registerAPI} from '../../Services/allAPI'
 import { useRouter } from 'next/navigation';
 
@@ -46,7 +46,7 @@ function RegisterPage() {
       console.log(result);
       if(result.status==200){
         alert('Registration Success')
-        router.push('/VerifyEmail')
+        router.push('/modules/verifyPhone')
       }
       else{
         alert(result.response.data)
@@ -60,26 +60,26 @@ function RegisterPage() {
   return (
     <div>
       <div className={styles.container}>
-        <Image src={icon} alt='icon' width={34} height={34} />
+
         <div className={styles.inputFields}>
           <form onSubmit={handleSubmit} className={styles.formContent}>
             <label className={styles.fieldName} htmlFor="name">Full Name</label>
-            <input type="text" name="name" value={formData.name} onChange={handleInputChange} />
+            <input type="text" placeholder='John Doe' name="name" value={formData.name} onChange={handleInputChange} />
 
             <label className={styles.fieldName} htmlFor="email">Email Address</label>
-            <input type="email" name="email" value={formData.email} onChange={handleInputChange} />
+            <input type="email" name="email" placeholder='eg: john@gmail.com' value={formData.email} onChange={handleInputChange} />
 
             <label className={styles.fieldName} htmlFor="phone">Phone Number</label>
-            <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} />
+            <input type="tel" name="phone" placeholder='eg: 90000000000' value={formData.phone} onChange={handleInputChange} />
 
             <label className={styles.fieldName} htmlFor="dob">Date of Birth</label>
             <input type="date" name="dob" value={formData.dob} onChange={handleInputChange} />
 
             <label className={styles.fieldName} htmlFor="aadhar">Aadhar No</label>
-            <input type="text" name="aadhar" value={formData.aadhar} onChange={handleInputChange} />
+            <input type="text" name="aadhar" placeholder='eg: 100080004000' value={formData.aadhar} onChange={handleInputChange} />
 
             <label className={styles.fieldName} htmlFor="password">Password</label>
-            <input type="password" name="password" value={formData.password} onChange={handleInputChange} />
+            <input type="password" name="password" placeholder='password' value={formData.password} onChange={handleInputChange} />
 
             <button className={styles.submitButton} type='submit'>Register</button>
           </form>

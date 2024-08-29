@@ -34,6 +34,18 @@ const userSchema = new mongoose.Schema({
     password:{
         type:String,
         required:true
+    },
+    pancard:{
+        type:String
+    },
+    address:{
+        type:String
+    },
+    account:{
+        type:String
+    },
+    gst:{
+        type:String
     }
 })
 

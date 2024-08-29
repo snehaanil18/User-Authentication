@@ -8,10 +8,25 @@ export const registerAPI = async(user) => {
 
 //verify-email
 export const verifyEmailAPI = async(email) => {
-    return await commonAPI("post",`${serverURL}/verify-email`,email,"")
+    return await commonAPI("post",`${serverURL}/verify-emaill`,email,"")
 }
 
-//verify-otp
+//verify-otp-email
 export const verifyOtpAPI = async(body) => {
     return await commonAPI("post",`${serverURL}/verify-otp`,body,"")
+}
+
+//verify-phone
+export const verifyMobileAPI = async(phone) => {
+    return await commonAPI("post",`${serverURL}/verify-phone`,phone,"")
+}
+
+//verify-otp-phone
+export const verifyMobileOtpAPI = async(body) => {
+    return await commonAPI("post",`${serverURL}/verify-otp-phone`,body,"")
+}
+
+//login
+export const loginAPI = async(body) => {
+    return await commonAPI("post",`${serverURL}/login`,body,"")
 }

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { verifyEmailAPI, verifyOtpAPI } from '../Services/allAPI'
+import { verifyEmailAPI, verifyOtpAPI } from '../../Services/allAPI'
 import { useSelector } from "react-redux";
-import { RootState } from "../Redux/store";
-import styles from './email.module.css'
+import { RootState } from "../../Redux/store";
+import styles from '../verification.module.css'
 
 function page() {
     const [otp, setOtp] = useState('')
@@ -12,27 +12,33 @@ function page() {
     const email = useSelector((state: RootState) => state.user.email);
 
     const verifyEmail = async () => {
-
+        console.log('logged');
+        
         const reqBody = { email }
         try {
             const response = await verifyEmailAPI(reqBody);
             console.log(response);
+            alert(response.data)
         }
         catch (error) {
             console.log(error);
+            alert('An error occured')
         }
     }
 
     useEffect(() => {
-        verifyEmail()
-    }, [email])
+        if(email){
+            verifyEmail()
+        }
+    }, [])
 
     const verifyOtp = async() => {
         const reqBody = {email,otp}
         console.log('clicked otp');
        try{
-           const response = await verifyOtpAPI(reqBody);
+           const {response} = await verifyOtpAPI(reqBody);
            console.log(response);
+           alert(response.data)
        }
        catch(error){
            console.log(error);
@@ -51,6 +57,11 @@ function page() {
                 <div className={styles.verification}>
                     <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
                     <button onClick={() => verifyOtp()}> Verify Email </button>
+                </div>
+
+                <div className={styles.resend}>
+                    <p>Didn&apos;t get OTP?</p>
+                    <button onClick={() => verifyEmail()}> Resend OTP </button>
                 </div>
 
             </div>
