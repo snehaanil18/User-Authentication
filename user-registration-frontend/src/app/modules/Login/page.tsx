@@ -1,12 +1,10 @@
 "use client";
 
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-// import { useDispatch, useSelector } from 'react-redux';
-// import { RootState } from '../../Redux/store'; 
-// import { setUserDetails } from '../../Redux/userSlice';
 import { useRouter } from 'next/navigation';
 import { loginAPI } from '@/app/Services/allAPI';
 import styles from './login.module.css'
+import Swal from 'sweetalert2'
 
 function page() {
   const [formData, setFormData] = useState({
@@ -14,9 +12,7 @@ function page() {
     password: ""
   })
 
-  // const dispatch = useDispatch();
-  // const router = useRouter()
-  // const userReduxState = useSelector((state: RootState) => state.user);
+  const router = useRouter()
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -30,21 +26,43 @@ function page() {
     e.preventDefault();
     const isAnyFieldEmpty = Object.values(formData).some(value => value.trim() === '');
     if (isAnyFieldEmpty) {
-      alert('Please fill all fields')
+      Swal.fire({
+        title: 'Error',
+        text: 'Please fill all fields before submitting',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
       return;
     }
     try {
       const result = await loginAPI(formData);
-      console.log(result);
       if(result.status==200){
-        alert('Login Success')
-
+        Swal.fire({
+          title: 'Success',
+          text: 'Successfully logged in',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        })
+        sessionStorage.setItem('token',result.data.token)
+        router.push('/modules/verifyDetails')
       }
       else{
-        alert(result.response.data)
+
+        Swal.fire({
+          title: 'Error',
+          text: result.response.data.message,
+          icon: 'error',
+          confirmButtonText: 'OK'
+        })
       }
     } catch (error) {
       console.error('Error during login:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'An error occured',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      })
     }
     
   };

@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import styles from '../verification.module.css'
 import { useRouter } from 'next/navigation';
+import Swal from 'sweetalert2'
 
 function page() {
     const [otp, setOtp] = useState('')
@@ -13,22 +14,20 @@ function page() {
     const phone = useSelector((state: RootState) => state.user.phone);
     const router = useRouter()
     const verifyMobile = async () => {
-        console.log('logged');
-        
+       
         const reqBody = {phone }
         try {
             const response = await verifyMobileAPI(reqBody);
-            console.log(response);
-            // if(response.status==200){
-            //     alert(response.message)
 
-            // }
-            // else{
-            //     alert('Something went Wrong')
-            // }
-        }
+         }
         catch (error) {
-            console.log(error);
+
+            Swal.fire({
+                title: 'Error',
+                text:  'Error occured in sending OTP' ,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            })
         }
     }
 
@@ -40,25 +39,51 @@ function page() {
 
     const verifyOtp = async() => {
         const reqBody = {phone,otp}
-        console.log('clicked otp');
-       try{
-           const {response} = await verifyMobileOtpAPI(reqBody);
-           console.log(response);
-        //    if(response.status==200){
-        //     alert(response.data.message)
-        //     // router.push('/modules/VerifyEmail')
-        //    }
-        //    else{
-        //     alert(response.data.message)
-        //    }
-        //    alert(response.data)
-       }
-       catch(error){
-           console.log(error);
-           alert('An error occured')
-       } 
-   }
 
+        try {
+            const response = await verifyMobileOtpAPI(reqBody);
+            
+            // Handle response status
+            if (response.status === 200) {
+                // OTP verified successfully
+                Swal.fire({
+                    title: 'Success',
+                    text: 'OTP verified successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  })
+
+                router.push('/modules/VerifyEmail')
+            } else if (response.status === 400) {
+                // Bad request (e.g., OTP invalid or expired)
+                Swal.fire({
+                    title: 'Error',
+                    text: response.data.message || 'Invalid OTP or phone number.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  })
+
+            } else {
+                // Other status codes
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Unexpected response from the server.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  })
+
+            }
+        } catch (error) {
+
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while verifying OTP.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              })
+
+        }
+    }        
 
     return (
         <div>

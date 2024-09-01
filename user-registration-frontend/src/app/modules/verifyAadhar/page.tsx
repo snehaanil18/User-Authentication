@@ -1,64 +1,48 @@
 "use client";
-
 import { useEffect, useState } from "react";
-
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import styles from '../verification.module.css'
 import { useRouter } from 'next/navigation';
+import { verifyAadharAPI } from "@/app/Services/allAPI";
+import Swal from 'sweetalert2'
 
 function page() {
-    const [otp, setOtp] = useState('')
 
-    const aadhar = useSelector((state: RootState) => state.user.aadhar);
+    const aadhaar = useSelector((state: RootState) => state.user.aadhar);
     const router = useRouter()
 
-    // const verifyMobile = async () => {
-    //     console.log('logged');
-        
-    //     const reqBody = {phone: `+91 ${phone}` }
-    //     try {
-    //         const response = await verifyMobileAPI(reqBody);
-    //         console.log(response);
-    //         // if(response.status==200){
-    //         //     alert(response.message)
-
-    //         // }
-    //         // else{
-    //         //     alert('Something went Wrong')
-    //         // }
-    //     }
-    //     catch (error) {
-    //         console.log(error);
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     if (phone) {
-    //         verifyMobile();
-    //     }
-    // }, []);
-
-//     const verifyOtp = async() => {
-//         const reqBody = {phone: `+91 ${phone}`,otp}
-//         console.log('clicked otp');
-//        try{
-//            const {response} = await verifyMobileOtpAPI(reqBody);
-//            console.log(response);
-//            if(response.status==200){
-//             alert(response.data.message)
-//             // router.push('/modules/VerifyEmail')
-//            }
-//            else{
-//             alert(response.data.message)
-//            }
-//         //    alert(response.data)
-//        }
-//        catch(error){
-//            console.log(error);
-//            alert('An error occured')
-//        } 
-//    }
+    const verifyAadhar = async () => {
+        const reqBody = { aadhaar};
+        try {
+            const response = await verifyAadharAPI(reqBody);
+            if(response.status==200){
+                Swal.fire({
+                    title: 'Success',
+                    text: 'Aadhar verified successfully',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  })
+                router.push('/modules/Login')
+            }
+            else{
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Invalid Aadhar.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                  })
+            }
+        }
+        catch (error) {
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while verifying Aadhar. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              })
+        }
+    }
 
 
     return (
@@ -66,20 +50,17 @@ function page() {
             <div className={styles.container}>
                 <h1>Aadhar Number Verification</h1>
                 <p>
-                    A verification code has been sent to your phone: <strong>{aadhar}</strong>
+                    A verification request will be sent for your Aadhar number: <strong>{aadhaar}</strong>
                 </p>
 
                 <div className={styles.verification}>
-                    <input type="text" placeholder="Enter OTP" value={otp} onChange={(e) => setOtp(e.target.value)} />
-                    <button> Verify Aadhar </button>
-
+                    <button onClick={() => verifyAadhar()} id={styles.verify}>Verify Aadhar</button>
                 </div>
 
                 <div className={styles.resend}>
-                    <p>Didn&apos;t get OTP?</p>
-                    <button> Resend OTP </button>
+                    <p>Didn&apos;t get a response?</p>
+                    <button onClick={() => verifyAadhar()}>Resend Verification</button>
                 </div>
-                
             </div>
         </div>
     )

@@ -30,8 +30,8 @@ exports.verifyPhone = async (req, res) => {
   
       // Create and send SMS
       const messageResponse = await client.messages.create({
-        body: `Your OTP for Account Verification is ${otp}`,  // Set your message body here
-        from: '+16505499375',  // Replace with your Twilio phone number
+        body: `Your OTP for Account Verification is ${otp}`,  
+        from: '+16505499375',  
         to:`+91 ${phone}` ,
       });
 
@@ -47,35 +47,38 @@ exports.verifyPhone = async (req, res) => {
   }
 };
 
-exports.verifyOtp = async(req,res) => {
-    const {phone,otp} = req.body;
-  
-      // Check if OTP, email, and expiration time exist in the session
+exports.verifyOtp = async (req, res) => {
+  const { phone, otp } = req.body;
+
+  // Check if OTP, phone, and expiration time exist in the session
   if (!req.session.otp || !req.session.phone || !req.session.otpExpiry) {
-    return res.status(400).json({message:"No OTP found. Please request a new one."});
+      return res.status(400).json({ message: "No OTP found. Please request a new one." });
   }
 
   const currentTime = Date.now();
   if (currentTime > req.session.otpExpiry) {
-    // OTP has expired
-    req.session.otp = null;
-    req.session.phone = null;
-    req.session.otpExpiry = null;
-    return res.status(400).json({message:"OTP has expired. Please request a new one."});
+      // OTP has expired
+      req.session.otp = null;
+      req.session.phone = null;
+      req.session.otpExpiry = null;
+      return res.status(400).json({ message: "OTP has expired. Please request a new one." });
   }
 
   if (req.session.otp === otp && req.session.phone === phone) {
-    // OTP is correct and within the valid time
-    // res.send("OTP verified successfully!");
-    await users.findOneAndUpdate({ phone:phone }, { phone_verify: true })
-    res.status(200).json({message:"OTP verified successfully!"})
 
-    // Clear the OTP and related data from the session after verification
-    req.session.otp = null;
-    req.session.phone = null;
-    req.session.otpExpiry = null;
+      // OTP is correct and within the valid time
+      await users.findOneAndUpdate({ phone: phone }, { 
+        phone_verify: true });
+
+      
+      // Clear the OTP and related data from the session after verification
+      req.session.otp = null;
+      req.session.phone = null;
+      req.session.otpExpiry = null;
+
+      return res.status(200).json({ message: "OTP verified successfully!" });
   } else {
-    // OTP or email is incorrect
-    res.status(400).json({message:"Invalid OTP or phone."});
+      // OTP or phone is incorrect
+      return res.status(400).json({ message: "Invalid OTP or phone number." });
   }
-}
+};

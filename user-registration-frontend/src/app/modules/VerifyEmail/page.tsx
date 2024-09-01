@@ -4,46 +4,77 @@ import { useEffect, useState } from "react";
 import { verifyEmailAPI, verifyOtpAPI } from '../../Services/allAPI'
 import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
-import styles from '../verification.module.css'
+import { useRouter } from 'next/navigation';
+import styles from '../verification.module.css';
+import Swal from 'sweetalert2'
 
 function page() {
     const [otp, setOtp] = useState('')
-
+    const router = useRouter()
     const email = useSelector((state: RootState) => state.user.email);
 
     const verifyEmail = async () => {
-        console.log('logged');
-        
+
+
         const reqBody = { email }
         try {
             const response = await verifyEmailAPI(reqBody);
-            console.log(response);
-            alert(response.data)
+
         }
         catch (error) {
-            console.log(error);
-            alert('An error occured')
+            Swal.fire({
+                title: 'Error',
+                text:  'Error occured in sending OTP' ,
+                icon: 'error',
+                confirmButtonText: 'OK'
+            })
         }
     }
 
     useEffect(() => {
-        if(email){
+        if (email) {
             verifyEmail()
         }
     }, [])
 
-    const verifyOtp = async() => {
-        const reqBody = {email,otp}
-        console.log('clicked otp');
-       try{
-           const {response} = await verifyOtpAPI(reqBody);
-           console.log(response);
-           alert(response.data)
-       }
-       catch(error){
-           console.log(error);
-       } 
-   }
+    const verifyOtp = async () => {
+        const reqBody = { email, otp };
+
+        try {
+            const response  = await verifyOtpAPI(reqBody);
+
+            
+            if (response.status === 200) {
+                // OTP verified successfully
+                Swal.fire({
+                    title: 'Success',
+                    text: 'OTP verified successfully!',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                  })
+                router.push('/modules/verifyAadhar');
+            }
+         else {
+            Swal.fire({
+                title: 'Error',
+                text: 'Invalid OTP or email.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              })
+            }
+    
+        } catch (error) {
+
+            Swal.fire({
+                title: 'Error',
+                text: 'An error occurred while verifying OTP. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+              })
+
+        }
+    };
+    
 
 
     return (

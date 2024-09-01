@@ -21,6 +21,7 @@
     "nodemailer": "^6.9.14",
     "otp-generator": "^4.0.1",
     "redis": "^4.7.0",
+    "request": "^2.88.2",
     "twilio": "^5.2.3"
   }
 }

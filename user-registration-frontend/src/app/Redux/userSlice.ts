@@ -15,6 +15,7 @@ interface UserState {
     pan: boolean;
     bank: boolean;
     gst: boolean;
+    address:boolean;
   };
 }
 
@@ -32,6 +33,7 @@ const initialState: UserState = {
     pan: false,
     bank: false,
     gst: false,
+    address:false
   },
 };
 
